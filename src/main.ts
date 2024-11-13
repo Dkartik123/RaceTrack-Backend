@@ -13,7 +13,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Добавляем aDSглобальную валидацию (если требуется)
+  // ДобавляеFADSFSAм aDSглобальную валидацию (если требуется)
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
