@@ -13,10 +13,15 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // ДобавляеFADSFSAм aDSглобальную валидацию (если требуется)
+  // Добавляем aDSглобальную валидацию (если требуется)
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  console.log(  `Application is running on: ${await app.getUrl()}`,{
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    username: process.env.DB_USERNAME,
+    database: process.env.DB_DATABASE,
+  });
 }
 bootstrap();
