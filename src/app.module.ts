@@ -23,7 +23,7 @@ import { AuthController } from './auth/auth.controller';
       load: [databaseConfig],
     }),
 
-    // Настройка TypeORM с PostgreSQL
+    // Настройка TypeORM с SQLite
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -32,18 +32,11 @@ import { AuthController } from './auth/auth.controller';
 
         // Вывод конфигурации для отладки
         console.log('Параметры подключения к базе данных:', {
-          host: dbConfig?.host || 'Не указано',
-          port: dbConfig?.port || 'Не указано',
-          username: dbConfig?.username || 'Не указано',
           database: dbConfig?.database || 'Не указано',
         });
 
         return {
-          type: 'postgres',
-          host: dbConfig.host,
-          port: dbConfig.port,
-          username: dbConfig.username,
-          password: dbConfig.password,
+          type: 'sqlite',
           database: dbConfig.database,
           autoLoadEntities: true,
           synchronize: true,

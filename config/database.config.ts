@@ -1,12 +1,11 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-export default () => ({
+export default (): { database: TypeOrmModuleOptions } => ({
         database: {
-                type: 'postgres',
-                host: process.env.DB_HOST || 'localhost',
-                port: parseInt(process.env.DB_PORT, 10) || 5432,
-                username: process.env.DB_USERNAME || 'postgres',
-                password: process.env.DB_PASSWORD || 'password',
-                database: process.env.DB_DATABASE || 'race',
+                type: 'sqlite',
+                database: './data/beachside_racetrack.sqlite', // Укажите путь к SQLite-файлу
+                entities: [__dirname + '/../**/*.entity{.ts,.js}'], // Пути к вашим сущностям
+                synchronize: true, // Используется только для разработки. В продакшене отключите!
+                logging: true, // Включите для отладки
         },
 });

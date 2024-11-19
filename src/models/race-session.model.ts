@@ -10,12 +10,11 @@ export class RaceSession {
     @Column()
     sessionName: string;
 
-    @Column({ default: null})
+    @Column({ default: null })
     startTime: Date | null;
 
-    @Column({ type: 'timestamp', default: () => 'NOW()' })
+    @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
-
 
     @Column({ default: 'Pending' })
     status: string;

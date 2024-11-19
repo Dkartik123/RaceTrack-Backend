@@ -13,15 +13,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Добавляем aDSглобальную валидацию (если требуется)
+  // Добавляем глобальную валидацию
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
-  console.log(  `Application is running on: ${await app.getUrl()}`,{
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    username: process.env.DB_USERNAME,
-    database: process.env.DB_DATABASE,
-  });
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
