@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Param } from '@nestjs/common';
+import { Controller, Get, Put, Param} from '@nestjs/common';
 import { RaceSessionService } from '../../modules/race-session/race-session.service';
 
 @Controller('race-flags')
