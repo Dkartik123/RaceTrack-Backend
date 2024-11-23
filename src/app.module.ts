@@ -21,6 +21,7 @@ import { AuthController } from './auth/auth.controller';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],
+      envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
 
     // Настройка TypeORM с SQLite
