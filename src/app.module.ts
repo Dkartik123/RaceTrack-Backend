@@ -12,8 +12,11 @@ import { FrontDeskModule } from './employee-interfaces/front-desk/front-desk.mod
 import { RaceControlModule } from './employee-interfaces/race-control/race-control.module';
 import { LapLineTrackerModule } from './employee-interfaces/lap-line-tracker/lap-line-tracker.module';
 import { AuthModule } from './auth/auth.module';
+import { TimerModule } from './timer/timer.module'; // Модуль таймера
+
+// Провайдеры и гейтвеи
 import { RaceGateway } from './gateways/race.gateway';
-import { AuthController } from './auth/auth.controller';
+import {AuthController} from "./auth/auth.controller";
 
 @Module({
   imports: [
@@ -23,23 +26,22 @@ import { AuthController } from './auth/auth.controller';
       load: [databaseConfig],
     }),
 
-    // Настройка TypeORM с SQLite
+    // Настройка TypeORM
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const dbConfig = configService.get('database');
 
-        // Вывод конфигурации для отладки
-        console.log('Параметры подключения к базе данных:', {
-          database: dbConfig?.database || 'Не указано',
+        console.log('Database connection parameters:', {
+          database: dbConfig?.database || 'Not specified',
         });
 
         return {
-          type: 'sqlite',
+          type: 'sqlite', // Использование SQLite
           database: dbConfig.database,
-          autoLoadEntities: true,
-          synchronize: true,
+          autoLoadEntities: true, // Автоматическая загрузка сущностей
+          synchronize: true, // Синхронизация структуры базы данных (не использовать в продакшене)
         };
       },
     }),
@@ -55,10 +57,15 @@ import { AuthController } from './auth/auth.controller';
     RaceControlModule,
     LapLineTrackerModule,
 
-    // Модуль аутентификации
+    // Модули функциональности
     AuthModule,
+    TimerModule, // Таймер для работы с WebSocket
   ],
-  controllers: [AuthController],
-  providers: [RaceGateway],
+  controllers: [
+    AuthController, // Контроллер аутентификации
+  ],
+  providers: [
+    RaceGateway, // WebSocket Gateway для управления гонками
+  ],
 })
 export class AppModule {}
