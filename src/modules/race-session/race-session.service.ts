@@ -1,8 +1,9 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RaceSession } from '../../models/race-session.model';
-import {RaceDriver} from "../../models/race-driver.model";
+import { RaceDriver } from '../../models/race-driver.model';
+import { RaceStatusGateway } from '../../gateways/race-status.gateway';
 
 @Injectable()
 export class RaceSessionService {
@@ -12,6 +13,8 @@ export class RaceSessionService {
 
         @InjectRepository(RaceDriver)
         private readonly raceDriverRepository: Repository<RaceDriver>,
+
+        private readonly raceStatusGateway: RaceStatusGateway
     ) {}
 
     async startRace(sessionId: number): Promise<RaceSession> {
@@ -20,7 +23,12 @@ export class RaceSessionService {
             throw new Error('Race session not found');
         }
         session.status = 'In Progress';
-        return this.raceSessionRepository.save(session);
+        const updatedSession = await this.raceSessionRepository.save(session);
+
+        // Отправка уведомления через WebSocket
+        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'In Progress');
+
+        return updatedSession;
     }
 
     async endRace(sessionId: number): Promise<RaceSession> {
@@ -29,7 +37,12 @@ export class RaceSessionService {
             throw new Error('Race session not found');
         }
         session.status = 'Finished';
-        return this.raceSessionRepository.save(session);
+        const updatedSession = await this.raceSessionRepository.save(session);
+
+        // Отправка уведомления через WebSocket
+        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'Finished');
+
+        return updatedSession;
     }
 
     async findOne(sessionId: number): Promise<RaceSession | undefined> {
@@ -52,6 +65,7 @@ export class RaceSessionService {
     async remove(id: number): Promise<void> {
         await this.raceSessionRepository.delete(id);
     }
+
     async addDriverToSession(sessionId: number, driverData: { name: string; carNumber: number }): Promise<RaceDriver> {
         const session = await this.raceSessionRepository.findOne({ where: { id: sessionId } });
         if (!session) throw new NotFoundException('Race session not found');
@@ -76,5 +90,20 @@ export class RaceSessionService {
         }
 
         return session.drivers;
+    }
+
+    async updateStatus(id: number, status: string): Promise<RaceSession> {
+        const raceSession = await this.raceSessionRepository.findOne({ where: { id } });
+        if (!raceSession) {
+            throw new NotFoundException('Race session not found');
+        }
+
+        raceSession.status = status;
+        const updatedSession = await this.raceSessionRepository.save(raceSession);
+
+        // Отправка уведомления через WebSocket
+        this.raceStatusGateway.sendRaceStatusUpdate(id, status);
+
+        return updatedSession;
     }
 }

@@ -4,13 +4,15 @@ import { RaceSessionService } from './race-session.service';
 import { RaceSessionController } from './race-session.controller';
 import { RaceSession } from '../../models/race-session.model';
 import { RaceDriver } from '../../models/race-driver.model';
+import {RaceStatusGateway} from "../../gateways/race-status.gateway";
+
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([RaceSession, RaceDriver]), // Импорт обоих репозиториев
+        TypeOrmModule.forFeature([RaceSession, RaceDriver]),
     ],
     controllers: [RaceSessionController],
-    providers: [RaceSessionService],
-    exports: [RaceSessionService],
+    providers: [RaceSessionService, RaceStatusGateway],
+    exports: [RaceSessionService, RaceStatusGateway],
 })
 export class RaceSessionModule {}

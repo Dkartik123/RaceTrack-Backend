@@ -43,5 +43,9 @@ export class RaceSessionController {
     async getDrivers(@Param('id') sessionId: number) {
         return this.raceSessionService.getDriversForSession(sessionId);
     }
+    @Put(':id/status')
+    async updateStatus(@Param('id') id: number, @Body() updateData: { status: string }) {
+        return await this.raceSessionService.updateStatus(id, updateData.status);
+    }
 
 }
