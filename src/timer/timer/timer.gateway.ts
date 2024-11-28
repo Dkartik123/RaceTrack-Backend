@@ -1,11 +1,19 @@
 // timer.gateway.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { WebSocketGateway, WebSocketServer, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  OnGatewayInit,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({ namespace: '/timer' })
 @Injectable()
-export class TimerGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+export class TimerGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   public server: Server;
 

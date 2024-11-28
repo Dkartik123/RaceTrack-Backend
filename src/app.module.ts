@@ -17,6 +17,7 @@ import { TimerModule } from './timer/timer.module'; // Модуль таймер
 // Провайдеры и гейтвеи
 import { RaceGateway } from './gateways/race.gateway';
 import {AuthController} from "./auth/auth.controller";
+import { FastestLapModule } from './fastest-lap/fastest-lap.module';
 
 @Module({
   imports: [
@@ -59,7 +60,8 @@ import {AuthController} from "./auth/auth.controller";
 
     // Модули функциональности
     AuthModule,
-    TimerModule, // Таймер для работы с WebSocket
+    TimerModule,
+    FastestLapModule, // Таймер для работы с WebSocket
   ],
   controllers: [
     AuthController, // Контроллер аутентификации
