@@ -20,7 +20,7 @@ async function bootstrap() {
     : 10; // По умолчанию 10 минут, если переменная не задана
 
   // Запускаем таймер с указанной продолжительностью
-  timerService.startTimer(timerDuration);
+  // timerService.startTimer(timerDuration);
 
   await app.listen(3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
