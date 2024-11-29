@@ -14,9 +14,10 @@ export class RaceStatusGateway {
         console.log(`Client disconnected from /race-status: ${client.id}`);
     }
 
-    sendRaceStatusUpdate(sessionId: number, status: string) {
-        const payload = { sessionId, status };
+    sendRaceStatusUpdate(sessionId: number, status: string, sessionName: string) {
+        const payload = { sessionId, status, sessionName };
         console.log('Sending raceStatusUpdate event:', payload);
-        this.server.emit('raceStatusUpdate', payload); // Рассылка всем клиентам в пространстве имен
+        this.server.emit('raceStatusUpdate', payload); // Рассылка всем клиентам
     }
+
 }

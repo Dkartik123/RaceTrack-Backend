@@ -25,8 +25,8 @@ export class RaceSessionService {
         session.status = 'In Progress';
         const updatedSession = await this.raceSessionRepository.save(session);
 
-        // Отправка уведомления через WebSocket
-        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'In Progress');
+        // Передаем sessionName
+        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'In Progress', session.sessionName);
 
         return updatedSession;
     }
@@ -39,8 +39,8 @@ export class RaceSessionService {
         session.status = 'Finished';
         const updatedSession = await this.raceSessionRepository.save(session);
 
-        // Отправка уведомления через WebSocket
-        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'Finished');
+        // Передаем sessionName
+        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'Finished', session.sessionName);
 
         return updatedSession;
     }
@@ -92,6 +92,7 @@ export class RaceSessionService {
         return session.drivers;
     }
 
+
     async updateStatus(id: number, status: string): Promise<RaceSession> {
         const raceSession = await this.raceSessionRepository.findOne({ where: { id } });
         if (!raceSession) {
@@ -101,8 +102,8 @@ export class RaceSessionService {
         raceSession.status = status;
         const updatedSession = await this.raceSessionRepository.save(raceSession);
 
-        // Отправка уведомления через WebSocket
-        this.raceStatusGateway.sendRaceStatusUpdate(id, status);
+        // Передаем sessionName
+        this.raceStatusGateway.sendRaceStatusUpdate(id, status, raceSession.sessionName);
 
         return updatedSession;
     }
