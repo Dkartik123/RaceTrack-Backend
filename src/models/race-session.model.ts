@@ -19,7 +19,7 @@ export class RaceSession {
   @Column({ default: 'Pending' })
   status: string;
 
-  @Column({ default: 'Safe' })
+  @Column({ default: '' })
   currentFlag: string;
 
   @OneToMany(() => RaceDriver, (driver) => driver.session, {
