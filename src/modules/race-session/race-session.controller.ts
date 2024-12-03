@@ -56,4 +56,11 @@ export class RaceSessionController {
         this.timerService.startTimer(duration); // Запуск таймера с переданной длительностью
         return { message: `Timer started for race session ${id}` };
     }
+    @Put(':id/flag')
+    async updateFlag(
+        @Param('id') sessionId: number,
+        @Body() updateData: { flag: string },
+    ) {
+        return this.raceSessionService.updateFlag(sessionId, updateData.flag);
+    }
 }

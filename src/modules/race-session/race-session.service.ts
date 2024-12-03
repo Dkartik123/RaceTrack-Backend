@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { RaceSession } from '../../models/race-session.model';
 import { RaceDriver } from '../../models/race-driver.model';
 import { RaceStatusGateway } from '../../gateways/race-status.gateway';
+import {FlagStatusGateway} from "../../gateways/flag-status.gateway";
 
 @Injectable()
 export class RaceSessionService {
     constructor(
         @InjectRepository(RaceSession)
         private readonly raceSessionRepository: Repository<RaceSession>,
+        private readonly flagStatusGateway: FlagStatusGateway,
 
         @InjectRepository(RaceDriver)
         private readonly raceDriverRepository: Repository<RaceDriver>,
@@ -104,6 +106,20 @@ export class RaceSessionService {
 
         // Передаем sessionName
         this.raceStatusGateway.sendRaceStatusUpdate(id, status, raceSession.sessionName);
+
+        return updatedSession;
+    }
+    async updateFlag(sessionId: number, newFlag: string): Promise<RaceSession> {
+        const raceSession = await this.raceSessionRepository.findOne({ where: { id: sessionId } });
+        if (!raceSession) {
+            throw new NotFoundException(`Race session with ID ${sessionId} not found`);
+        }
+
+        raceSession.currentFlag = newFlag;
+        const updatedSession = await this.raceSessionRepository.save(raceSession);
+
+        // Отправка обновления через WebSocket
+        this.flagStatusGateway.broadcastFlagUpdate(sessionId, newFlag);
 
         return updatedSession;
     }
