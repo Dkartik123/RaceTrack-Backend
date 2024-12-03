@@ -1,19 +1,20 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { TimerService } from './timer.service';
 
 @Controller('timer')
 export class TimerController {
-    constructor(private readonly timerService: TimerService) {}
+  constructor(private readonly timerService: TimerService) {}
 
-    @Post('start')
-    startTimer(@Body('duration') duration: number) {
-        this.timerService.startTimer(duration);
-        return { message: `Timer started for ${duration} minute(s)` };
-    }
+  @Post('start')
+  startTimer() {
+    // No need to pass 'duration' in the request body, as it will be fetched from the environment variable.
+    this.timerService.startTimer();
+    return { message: 'Timer started' };
+  }
 
-    @Post('stop')
-    stopTimer() {
-        this.timerService.stopTimer();
-        return { message: 'Timer stopped' };
-    }
+  @Post('stop')
+  stopTimer() {
+    this.timerService.stopTimer();
+    return { message: 'Timer stopped' };
+  }
 }
