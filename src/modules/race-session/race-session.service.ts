@@ -19,18 +19,17 @@ export class RaceSessionService {
         private readonly raceStatusGateway: RaceStatusGateway
     ) {}
 
-    async startRace(sessionId: number): Promise<RaceSession> {
+    async startRace(sessionId: number): Promise<void> {
         const session = await this.raceSessionRepository.findOne({ where: { id: sessionId } });
         if (!session) {
-            throw new Error('Race session not found');
+            throw new NotFoundException('Race session not found');
         }
+
         session.status = 'In Progress';
-        const updatedSession = await this.raceSessionRepository.save(session);
+        await this.raceSessionRepository.save(session);
 
-        // Передаем sessionName
-        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'In Progress', session.sessionName);
-
-        return updatedSession;
+        // Send race status update with an appropriate flag
+        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'In Progress', session.sessionName, 'Safe');
     }
 
     async endRace(sessionId: number): Promise<RaceSession> {
@@ -38,14 +37,22 @@ export class RaceSessionService {
         if (!session) {
             throw new Error('Race session not found');
         }
+
+        // Update the status to "Finished"
         session.status = 'Finished';
         const updatedSession = await this.raceSessionRepository.save(session);
 
-        // Передаем sessionName
-        this.raceStatusGateway.sendRaceStatusUpdate(sessionId, 'Finished', session.sessionName);
+        // Pass the "Finish" flag to the gateway
+        this.raceStatusGateway.sendRaceStatusUpdate(
+            sessionId,
+            'Finished',
+            session.sessionName,
+            'Finish' // Flag to indicate the race has finished
+        );
 
         return updatedSession;
     }
+
 
     async findOne(sessionId: number): Promise<RaceSession | undefined> {
         return this.raceSessionRepository.findOne({ where: { id: sessionId } });
@@ -95,20 +102,27 @@ export class RaceSessionService {
     }
 
 
-    async updateStatus(id: number, status: string): Promise<RaceSession> {
+    async updateStatus(id: number, status: string, flag: string = ''): Promise<RaceSession> {
         const raceSession = await this.raceSessionRepository.findOne({ where: { id } });
         if (!raceSession) {
             throw new NotFoundException('Race session not found');
         }
 
         raceSession.status = status;
+
+        // Optionally update the flag if provided
+        if (flag) {
+            raceSession.currentFlag = flag;
+        }
+
         const updatedSession = await this.raceSessionRepository.save(raceSession);
 
-        // Передаем sessionName
-        this.raceStatusGateway.sendRaceStatusUpdate(id, status, raceSession.sessionName);
+        // Pass the flag parameter to the gateway
+        this.raceStatusGateway.sendRaceStatusUpdate(id, status, raceSession.sessionName, flag);
 
         return updatedSession;
     }
+
     async updateFlag(sessionId: number, newFlag: string): Promise<RaceSession> {
         const raceSession = await this.raceSessionRepository.findOne({ where: { id: sessionId } });
         if (!raceSession) {

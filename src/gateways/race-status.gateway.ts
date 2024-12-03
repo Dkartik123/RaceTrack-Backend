@@ -17,8 +17,8 @@ export class RaceStatusGateway {
     }
 
     // Рассылка обновлений статуса гонки
-    sendRaceStatusUpdate(sessionId: number, status: string, sessionName: string) {
-        const payload = { sessionId, status, sessionName };
+    sendRaceStatusUpdate(sessionId: number, status: string, sessionName: string, flag: string) {
+        const payload = { sessionId, status, sessionName, flag };
         console.log('Broadcasting raceStatusUpdate event:', payload);
         this.server.emit('raceStatusUpdate', payload); // Рассылка события всем клиентам
     }
@@ -30,11 +30,11 @@ export class RaceStatusGateway {
         this.server.emit('flagUpdate', payload); // Рассылка события всем клиентам
     }
 
-    // Обработка обновлений статуса гонки
+    // Handle incoming race status updates
     @SubscribeMessage('updateRaceStatus')
-    handleRaceStatusUpdate(@MessageBody() data: { sessionId: number; status: string; sessionName: string }) {
+    handleRaceStatusUpdate(@MessageBody() data: { sessionId: number; status: string; sessionName: string; flag: string }) {
         console.log('Received raceStatusUpdate:', data);
-        this.sendRaceStatusUpdate(data.sessionId, data.status, data.sessionName); // Рассылаем обновление
+        this.sendRaceStatusUpdate(data.sessionId, data.status, data.sessionName, data.flag); // Propagate update to all clients
     }
 
     // Обработка обновлений флагов
