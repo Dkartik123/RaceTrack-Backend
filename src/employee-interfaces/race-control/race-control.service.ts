@@ -39,4 +39,10 @@ export class RaceControlService {
             throw new Error('Session not found');
         }
     }
+
+    async getCurrentRace() {
+        return await this.raceSessionRepository.findOne({
+            where: { status: 'InProgress' }
+        });
+    }
 }
