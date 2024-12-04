@@ -73,4 +73,45 @@ export class RaceSessionController {
     ) {
         return this.raceSessionService.updateFlag(sessionId, updateData.flag);
     }
+    @Get('current-race')
+    async getCurrentRace() {
+        try {
+            console.log('Getting current race...');
+            const activeRace = await this.raceSessionService.findActiveRace();
+            console.log('Active race found:', activeRace);
+
+            // Всегда возвращаем объект с данными, независимо от результата
+            const response = {
+                success: true,
+                data: activeRace ? {
+                    sessionId: activeRace.id,
+                    sessionName: activeRace.sessionName,
+                    status: activeRace.status,
+                    flag: activeRace.currentFlag || 'Safe'
+                } : {
+                    sessionId: "Unknown",
+                    sessionName: "No data",
+                    status: "No data",
+                    flag: "Safe"
+                }
+            };
+
+            console.log('Sending response:', response);
+            return response; // Явно возвращаем ответ
+        } catch (error) {
+            console.error('Error in getCurrentRace:', error);
+            // В случае ошибки тоже возвращаем структурированный ответ
+            return {
+                success: false,
+                error: 'Failed to fetch current race',
+                data: {
+                    sessionId: "Unknown",
+                    sessionName: "Error occurred",
+                    status: "Error",
+                    flag: "Safe"
+                }
+            };
+        }
+    }
+
 }

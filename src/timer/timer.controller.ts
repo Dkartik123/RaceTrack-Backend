@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common';
+import {Controller, Get, Post} from '@nestjs/common';
 import { TimerService } from './timer.service';
 
 @Controller('timer')
@@ -17,4 +17,11 @@ export class TimerController {
     this.timerService.stopTimer();
     return { message: 'Timer stopped' };
   }
+  // @Get('status')
+  // getTimerStatus() {
+  //   return {
+  //     running: this.timerService.isRunning(),
+  //     remainingTime: this.timerService.getRemainingTime(),
+  //   };
+  // }
 }

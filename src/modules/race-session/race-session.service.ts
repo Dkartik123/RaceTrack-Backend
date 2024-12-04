@@ -137,4 +137,31 @@ export class RaceSessionService {
 
         return updatedSession;
     }
+    async findActiveRace(): Promise<RaceSession | null> {
+        console.log('Starting findActiveRace method...');
+        try {
+            const activeRace = await this.raceSessionRepository.findOne({
+                where: {
+                    status: 'In Progress' // убедитесь, что это точно совпадает с тем, как статус записан в базе
+                },
+                order: {
+                    id: 'DESC'
+                }
+            });
+
+            console.log('Query executed. Result:', activeRace);
+
+            // Добавим проверку на null
+            if (!activeRace) {
+                console.log('No active race found');
+                return null;
+            }
+
+            return activeRace;
+        } catch (error) {
+            console.error('Error in findActiveRace:', error);
+            throw error; // Пробрасываем ошибку дальше
+        }
+    }
+
 }
