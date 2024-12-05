@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, HttpStatus, Param, Put } from '@nestjs/common';
+import { Controller, Get, Param, Put } from '@nestjs/common';
 import { RaceControlService } from './race-control.service';
 
 @Controller('race-control')
@@ -41,33 +41,6 @@ export class RaceControlController {
                 success: false,
                 error: "Failed to fetch current race"
             };
-        }
-    }
-
-    @Controller('race-sessions')
-    export class RaceControlController {
-        constructor(private readonly raceControlService: RaceControlService) {}
-
-        @Get('current')
-        async getCurrentActiveRace() {
-            try {
-                const currentRace = await this.raceControlService.getCurrentRace();
-                if (currentRace) {
-                    return currentRace;
-                }
-                return {
-                    id: "Unknown",
-                    sessionName: "No active race",
-                    status: "No data",
-                    currentFlag: "Safe"
-                };
-            } catch (error) {
-                console.error("Error fetching current race:", error);
-                throw new HttpException(
-                    'Failed to fetch current race',
-                    HttpStatus.INTERNAL_SERVER_ERROR
-                );
-            }
         }
     }
 }
