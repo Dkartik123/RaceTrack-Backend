@@ -98,10 +98,22 @@ export class TimerService {
     if (this.interval) {
       clearInterval(this.interval);
       this.interval = null;
+      this.remainingSeconds = 0; // Сбрасываем оставшееся время
       
       this.stopSaveStateInterval();
-      this.saveTimerState();
-      this.logger.log('Timer stopped');
+      
+      // Удаляем файл состояния таймера
+      try {
+        if (fs.existsSync(this.STATE_FILE)) {
+          fs.unlinkSync(this.STATE_FILE);
+        }
+      } catch (error) {
+        this.logger.error('Failed to delete timer state file:', error);
+      }
+      
+      // Отправляем обновление времени клиентам
+      this.gateway.server.emit('timeUpdate', '00:00');
+      this.logger.log('Timer stopped and reset');
     }
   }
 

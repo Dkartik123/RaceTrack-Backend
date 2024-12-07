@@ -34,6 +34,12 @@ export class TimerGateway
   // Метод для отправки произвольных сообщений всем клиентам
   broadcastMessage(message: string) {
     this.server.emit('message', message);
+    if (message === 'Timer finished') {
+      this.server.emit('timerFinished');
+    }
+    if (message === 'Timer stopped') {
+      this.server.emit('timerStopped');
+    }
     this.logger.log(`Broadcasting message: ${message}`);
   }
 }
