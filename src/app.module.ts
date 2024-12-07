@@ -1,23 +1,23 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import databaseConfig from '../config/database.config'; // Конфигурация базы данных
 
 // Модули приложения
-import { RaceSessionModule } from './modules/race-session/race-session.module';
-import { RaceDriverModule } from './modules/race-driver/race-driver.module';
-import { RaceCarModule } from './modules/race-car/race-car.module';
-import { LapTimeModule } from './modules/lap-time/lap-time.module';
-import { FrontDeskModule } from './employee-interfaces/front-desk/front-desk.module';
-import { RaceControlModule } from './employee-interfaces/race-control/race-control.module';
-import { LapLineTrackerModule } from './employee-interfaces/lap-line-tracker/lap-line-tracker.module';
 import { AuthModule } from './auth/auth.module';
+import { FrontDeskModule } from './employee-interfaces/front-desk/front-desk.module';
+import { LapLineTrackerModule } from './employee-interfaces/lap-line-tracker/lap-line-tracker.module';
+import { RaceControlModule } from './employee-interfaces/race-control/race-control.module';
+import { LapTimeModule } from './modules/lap-time/lap-time.module';
+import { RaceCarModule } from './modules/race-car/race-car.module';
+import { RaceDriverModule } from './modules/race-driver/race-driver.module';
+import { RaceSessionModule } from './modules/race-session/race-session.module';
 import { TimerModule } from './timer/timer.module'; // Модуль таймера
 
 // Провайдеры и гейтвеи
-import { RaceGateway } from './gateways/race.gateway';
-import {AuthController} from "./auth/auth.controller";
+import { AuthController } from "./auth/auth.controller";
 import { FastestLapModule } from './fastest-lap/fastest-lap.module';
+import { RaceGateway } from './gateways/race.gateway';
 
 @Module({
   imports: [

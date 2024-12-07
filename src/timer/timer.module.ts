@@ -1,8 +1,8 @@
 // timer.module.ts
 import { Module } from '@nestjs/common';
-import { TimerGateway } from './timer/timer.gateway';
-import { TimerService } from './timer.service';
 import { TimerController } from './timer.controller';
+import { TimerService } from './timer.service';
+import { TimerGateway } from './timer/timer.gateway';
 
 @Module({
   providers: [TimerGateway, TimerService],
