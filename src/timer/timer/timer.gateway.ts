@@ -31,14 +31,11 @@ export class TimerGateway
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  // Метод для отправки произвольных сообщений всем клиентам
   broadcastMessage(message: string) {
     this.server.emit('message', message);
     if (message === 'Timer finished') {
       this.server.emit('timerFinished');
-    }
-    if (message === 'Timer stopped') {
-      this.server.emit('timerStopped');
+      this.server.emit('requestNextRace');
     }
     this.logger.log(`Broadcasting message: ${message}`);
   }
